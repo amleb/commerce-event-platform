@@ -20,15 +20,16 @@ and how services communicate through events.
 
 ## Services Overview
 
-| Service | Responsibility | Owns Data? | Emits Events? |
-|---|---|-----------:|--------------:|
-| Order Service | Creates and manages orders |        Yes |           Yes |
-| Inventory Service | Reserves and releases stock |        Yes |           Yes |
-| Payment Service | Authorizes and captures payments |        Yes |           Yes |
-| Fulfillment Service | Prepares and ships orders |        Yes |           Yes |
-| Notification Service | Sends customer notifications |    Yes[^1] |            No |
+| Service              | Responsibility                   | Owns Data? | Emits Events? |
+| -------------------- | -------------------------------- | ---------: | ------------: |
+| Order Service        | Creates and manages orders       |        Yes |           Yes |
+| Inventory Service    | Reserves and releases stock      |        Yes |           Yes |
+| Payment Service      | Authorizes and captures payments |        Yes |           Yes |
+| Fulfillment Service  | Prepares and ships orders        |        Yes |           Yes |
+| Notification Service | Sends customer notifications     |    Yes[^1] |            No |
 
 [^1]: logs, delivery status
+
 ---
 
 ## Order Service
@@ -236,3 +237,4 @@ sequenceDiagram
     OrderService-->>FulfillmentService: OrderConfirmed
     FulfillmentService-->>OrderService: FulfillmentCompleted
     OrderService-->>NotificationService: OrderCompleted
+```

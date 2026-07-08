@@ -14,15 +14,15 @@
 
 # Order States
 
-| State | Description | Owner |
-|--------|-------------|-------|
-| Created | Customer submitted an order | Order Service |
-| Pending | Waiting for downstream processing | Order Service |
-| Confirmed | Order accepted | Order Service |
-| Paid | Payment completed | Payment Service |
-| FulfillmentRequested | Shipment requested | Fulfillment Service |
-| Completed | Successfully fulfilled | Order Service |
-| Cancelled | Order cancelled | Order Service |
+| State                | Description                       | Owner               |
+| -------------------- | --------------------------------- | ------------------- |
+| Created              | Customer submitted an order       | Order Service       |
+| Pending              | Waiting for downstream processing | Order Service       |
+| Confirmed            | Order accepted                    | Order Service       |
+| Paid                 | Payment completed                 | Payment Service     |
+| FulfillmentRequested | Shipment requested                | Fulfillment Service |
+| Completed            | Successfully fulfilled            | Order Service       |
+| Cancelled            | Order cancelled                   | Order Service       |
 
 ---
 
@@ -43,12 +43,12 @@ Describe the ideal flow.
 
 # State Transitions
 
-| Current | Event | Next |
-|----------|-------|------|
-| Created | InventoryReserved | AwaitingPayment |
-| AwaitingPayment | PaymentSucceeded | Confirmed |
-| Confirmed | FulfillmentStarted | InFulfillment |
-| InFulfillment | FulfillmentCompleted | Completed |
+| Current         | Event                | Next            |
+| --------------- | -------------------- | --------------- |
+| Created         | InventoryReserved    | AwaitingPayment |
+| AwaitingPayment | PaymentSucceeded     | Confirmed       |
+| Confirmed       | FulfillmentStarted   | InFulfillment   |
+| InFulfillment   | FulfillmentCompleted | Completed       |
 
 ---
 
@@ -57,6 +57,7 @@ Describe the ideal flow.
 ### Inventory reservation fails
 
 Result:
+
 - order is cancelled
 - stock remains unchanged
 - customer is notified
@@ -66,6 +67,7 @@ Result:
 ### Payment fails
 
 Result:
+
 - inventory reservation is released
 - order becomes cancelled
 
@@ -74,6 +76,7 @@ Result:
 ### Fulfillment fails
 
 Result:
+
 - retry
 - manual intervention
 - refund?
