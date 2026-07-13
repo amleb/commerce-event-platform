@@ -16,7 +16,6 @@ async function bootstrap() {
     nodeEnv: orderServiceConfig.nodeEnv,
     logLevel: orderServiceConfig.logLevel,
   });
-
 }
 
 void bootstrap();
