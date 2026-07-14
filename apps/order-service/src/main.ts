@@ -15,6 +15,7 @@ async function bootstrap() {
     port: orderServiceConfig.port,
     nodeEnv: orderServiceConfig.nodeEnv,
     logLevel: orderServiceConfig.logLevel,
+    dbUrl: orderServiceConfig.dbUrl,
   });
 }
 
