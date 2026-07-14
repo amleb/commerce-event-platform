@@ -12,7 +12,14 @@ A production-style portfolio project for an event-driven order processing platfo
 
 ## Current Status
 
-Repository initialization only. No application services have been implemented yet.
+- [x] Milestone 1 – Repository Foundation
+- [x] Milestone 2 – Service Boundary Design
+- [x] Milestone 3 – Order Service Skeleton
+- [x] Milestone 4 – Persistence
+- [ ] Milestone 5 – Event Publishing
+- [ ] Milestone 6 – Downstream Consumers
+- [ ] Milestone 7 – Reliability
+- [ ] Milestone 8 – AWS-Oriented Architecture
 
 ## Planned Services
 
