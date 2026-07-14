@@ -6,8 +6,11 @@
     "start": "tsx src/main.ts",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "jest --config jest.config.cjs",
-    "test:watch": "jest --config jest.config.cjs --watch",
+    "test": "jest --config jest.config.cjs --testMatch '**/*.spec.ts'",
+    "test:watch": "jest --config jest.config.cjs --watch --testMatch '**/*.spec.ts'",
+    "db:test:create": "./scripts/create-test-db.sh",
+    "db:test:migrate": "ORDER_SERVICE_DATABASE_URL=postgresql://commerce:commerce@localhost:5432/commerce_test drizzle-kit migrate",
+    "test:integration": "pnpm db:test:create && pnpm db:test:migrate && ORDER_SERVICE_DATABASE_URL=postgresql://commerce:commerce@localhost:5432/commerce_test jest --config jest.config.cjs --testMatch '**/*.int-spec.ts' --runInBand",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"
