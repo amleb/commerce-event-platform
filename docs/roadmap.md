@@ -31,9 +31,9 @@
 
 ## Milestone 5: Event Publishing
 
+- Introduce the outbox pattern.
 - Add Kafka producer.
 - Publish `OrderCreated`.
-- Introduce the outbox pattern.
 
 ## Milestone 6: Downstream Consumers
 
