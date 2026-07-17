@@ -28,6 +28,19 @@ Format:
 
 ## Event Metadata
 
+```typescript
+{
+    eventId: string;
+    eventType: string;
+    eventVersion: number;
+    occurredAt: string;
+    aggregateType: string;
+    aggregateId: string;
+    correlationId?: string;
+    payload: {};
+}
+```
+
 ## Kafka Topic Strategy
 
 ## Partitioning Strategy
@@ -36,11 +49,47 @@ Format:
 
 ## Event Versioning
 
-## Initial Event Catalog (table)
+## Event Summary
+
+| Event               | Producer          | Consumers               | Purpose                        |
+| ------------------- | ----------------- | ----------------------- | ------------------------------ |
+| `OrderCreated`      | Order Service     | Inventory, Notification | A new order entered the system |
+| `InventoryReserved` | Inventory Service | Payment, Order          | Stock reserved successfully    |
+| `PaymentAuthorized` | Payment Service   | Order                   | Payment approved               |
+| `OrderConfirmed`    | Order Service     | Fulfillment             | Order ready for fulfillment    |
 
 ## Event Definitions
 
-    - OrderCreated
+## OrderCreated
+
+Producer:
+Order Service
+
+Consumers:
+Inventory Service
+Notification Service
+
+Purpose:
+A customer order has been accepted by the Order Service and entered the processing workflow.
+
+Key Data:
+
+- orderId
+- customerId
+- items
+- totalCents
+- currency
+
+Notes:
+
+- This event does not imply inventory has been reserved.
+- This event does not imply payment has been authorized.
+- It starts the asynchronous order processing workflow.
+
+---
+
+### @todo
+
     - InventoryReserved
     - InventoryReservationFailed
     - PaymentAuthorized
