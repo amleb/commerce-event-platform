@@ -51,12 +51,12 @@ Format:
 
 ## Event Summary
 
-| Event               | Producer          | Consumers               | Purpose                        |
-| ------------------- | ----------------- | ----------------------- | ------------------------------ |
-| `OrderCreated`      | Order Service     | Inventory, Notification | A new order entered the system |
-| `InventoryReserved` | Inventory Service | Payment, Order          | Stock reserved successfully    |
-| `PaymentAuthorized` | Payment Service   | Order                   | Payment approved               |
-| `OrderConfirmed`    | Order Service     | Fulfillment             | Order ready for fulfillment    |
+| Event                           | Producer          | Consumers               | Purpose                        |
+| ------------------------------- | ----------------- | ----------------------- | ------------------------------ |
+| [`OrderCreated`](#ordercreated) | Order Service     | Inventory, Notification | A new order entered the system |
+| `InventoryReserved`             | Inventory Service | Payment, Order          | Stock reserved successfully    |
+| `PaymentAuthorized`             | Payment Service   | Order                   | Payment approved               |
+| `OrderConfirmed`                | Order Service     | Fulfillment             | Order ready for fulfillment    |
 
 ## Event Definitions
 
