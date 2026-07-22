@@ -1,9 +1,11 @@
 import { eq } from 'drizzle-orm';
+import { CreateOrderHandler } from '../../src/application/create-order.handler';
 import { pool, db } from '../../src/persistence/database';
-import { orderItems, orders } from '../../src/persistence/schema';
+import { orderItems, orders, outboxEvents } from '../../src/persistence/schema';
 
-describe('order persistence', () => {
+describe('CreateOrderHandler (integration)', () => {
   afterEach(async () => {
+    await db.delete(outboxEvents);
     await db.delete(orderItems);
     await db.delete(orders);
   });
@@ -12,22 +14,16 @@ describe('order persistence', () => {
     await pool.end();
   });
 
-  it('persists and reads an order with items', async () => {
-    const [order] = await db
-      .insert(orders)
-      .values({
-        customerId: 'customer-1',
-        status: 'created',
-        totalCents: 2599,
-        currency: 'USD',
-      })
-      .returning();
-
-    await db.insert(orderItems).values({
-      orderId: order.id,
-      sku: 'sku-1',
-      quantity: 2,
-      unitCents: 1299,
+  it('commits an order, its items, and exactly one pending OrderCreated outbox event', async () => {
+    const createOrder = new CreateOrderHandler();
+    const { order } = await createOrder.execute({
+      customerId: 'customer-1',
+      totalCents: 2599,
+      currency: 'USD',
+      items: [
+        { sku: 'sku-1', quantity: 2, unitCents: 1299 },
+        { sku: 'sku-2', quantity: 1, unitCents: 1 },
+      ],
     });
 
     const persistedOrders = await db.select().from(orders).where(eq(orders.id, order.id));
@@ -36,6 +32,11 @@ describe('order persistence', () => {
       .select()
       .from(orderItems)
       .where(eq(orderItems.orderId, order.id));
+
+    const persistedEvents = await db
+      .select()
+      .from(outboxEvents)
+      .where(eq(outboxEvents.aggregateId, order.id));
 
     expect(persistedOrders).toHaveLength(1);
     expect(persistedOrders[0]).toMatchObject({
@@ -46,12 +47,42 @@ describe('order persistence', () => {
       currency: 'USD',
     });
 
-    expect(persistedItems).toHaveLength(1);
-    expect(persistedItems[0]).toMatchObject({
-      orderId: order.id,
-      sku: 'sku-1',
-      quantity: 2,
-      unitCents: 1299,
+    expect(persistedItems).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          orderId: order.id,
+          sku: 'sku-1',
+          quantity: 2,
+          unitCents: 1299,
+        }),
+        expect.objectContaining({
+          orderId: order.id,
+          sku: 'sku-2',
+          quantity: 1,
+          unitCents: 1,
+        }),
+      ]),
+    );
+    expect(persistedItems).toHaveLength(2);
+
+    expect(persistedEvents).toHaveLength(1);
+    expect(persistedEvents[0]).toMatchObject({
+      aggregateType: 'order',
+      aggregateId: order.id,
+      eventType: 'OrderCreated',
+      eventVersion: 1,
+      status: 'pending',
+      attempts: 0,
+      payload: {
+        orderId: order.id,
+        customerId: 'customer-1',
+        totalCents: 2599,
+        currency: 'USD',
+        items: [
+          { sku: 'sku-1', quantity: 2, unitCents: 1299 },
+          { sku: 'sku-2', quantity: 1, unitCents: 1 },
+        ],
+      },
     });
   });
 });

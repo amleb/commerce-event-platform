@@ -9,11 +9,7 @@ export const orderStatus = pgEnum('order_status', [
   'cancelled',
 ]);
 
-export const outboxEventStatus = pgEnum('outbox_event_status', [
-  'pending',
-  'published',
-  'failed',
-]);
+export const outboxEventStatus = pgEnum('outbox_event_status', ['pending', 'published', 'failed']);
 
 export const orders = pgTable('orders', {
   id: uuid('id').primaryKey().defaultRandom(),
